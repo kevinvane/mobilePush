@@ -1,15 +1,28 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "com.test.testxinge"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+
+        ndk {
+            //根据需要 自行选择添加的对应cpu类型的.so库。
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+            manifestPlaceholders = [
+
+                    XG_ACCESS_ID:"2100197984",
+                    XG_ACCESS_KEY : "AX8493VQDT5M",
+            ]
+        }
+
+
     }
     buildTypes {
         release {
@@ -22,9 +35,10 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile files('libs/jg_filter_sdk_1.1.jar')
-    compile files('libs/wup-1.0.0.E-SNAPSHOT.jar')
-    compile files('libs/Xg_sdk_v2.44_20160505_1023.jar')
+    compile 'com.tencent.xinge:xinge:3.1.1-alpha'
+    compile 'com.tencent.mid:mid:3.721-alpha'
+    //compile files('libs/jg_filter_sdk_1.1.jar')
+    //compile files('libs/wup-1.0.0.E-SNAPSHOT.jar')
+    //compile files('libs/Xg_sdk_v2.44_20160505_1023.jar')
 
 }

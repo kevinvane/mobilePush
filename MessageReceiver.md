@@ -1,5 +1,11 @@
 package com.test.receiver;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -11,72 +17,37 @@ import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-;
-
 public class MessageReceiver extends XGPushBaseReceiver {
 	private Intent intent = new Intent("com.qq.xgdemo.activity.UPDATE_LISTVIEW");
 	public static final String LogTag = "TPushReceiver";
 
 	private void show(Context context, String text) {
-		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+//		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
 	}
-
-
-	// 消息透传的回调
-	@Override
-	public void onTextMessage(Context context, XGPushTextMessage message) {
-		// TODO Auto-generated method stub
-		String text = "消息透传的回调:" + message.toString();
-		Log.i(LogTag, text);
-		// 获取自定义key-value
-		String customContent = message.getCustomContent();
-		if (customContent != null && customContent.length() != 0) {
-			try {
-				JSONObject obj = new JSONObject(customContent);
-				// key1为前台配置的key
-				if (!obj.isNull("key")) {
-					String value = obj.getString("key");
-					Log.d(LogTag, "get custom value:" + value);
-				}
-				// ...
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-		// APP自主处理消息的过程...
-		//Log.d(LogTag, text);
-		//show(context, text);
-	}
-
 
 	// 通知展示
 	@Override
 	public void onNotifactionShowedResult(Context context,
-										  XGPushShowedResult notifiShowedRlt) {
+			XGPushShowedResult notifiShowedRlt) {
 		if (context == null || notifiShowedRlt == null) {
 			return;
 		}
-//		XGNotification notific = new XGNotification();
-//		notific.setMsg_id(notifiShowedRlt.getMsgId());
-//		notific.setTitle(notifiShowedRlt.getTitle());
-//		notific.setContent(notifiShowedRlt.getContent());
-//		// notificationActionType==1为Activity，2为url，3为intent
-//		notific.setNotificationActionType(notifiShowedRlt
-//				.getNotificationActionType());
-//		//Activity,url,intent都可以通过getActivity()获得
-//		notific.setActivity(notifiShowedRlt.getActivity());
-//		notific.setUpdate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-//				.format(Calendar.getInstance().getTime()));
-//		NotificationService.getInstance(context).save(notific);
-//		context.sendBroadcast(intent);
-		//show(context, "您有1条新消息, " + "通知被展示 ， " + notifiShowedRlt.toString());
-		Log.d("LC","+++++++++++++++++++++++++++++展示通知的回调");
-		Log.i("LC","+++++++++++++++++++++++++++++展示通知的回调:"+notifiShowedRlt.toString());
+		XGNotification notific = new XGNotification();
+		notific.setMsg_id(notifiShowedRlt.getMsgId());
+		notific.setTitle(notifiShowedRlt.getTitle());
+		notific.setContent(notifiShowedRlt.getContent());
+		// notificationActionType==1为Activity，2为url，3为intent
+		notific.setNotificationActionType(notifiShowedRlt
+				.getNotificationActionType());
+		// Activity,url,intent都可以通过getActivity()获得
+		notific.setActivity(notifiShowedRlt.getActivity());
+		notific.setUpdate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+				.format(Calendar.getInstance().getTime()));
+		NotificationService.getInstance(context).save(notific);
+		context.sendBroadcast(intent);
+		show(context, "您有1条新消息, " + "通知被展示 ， " + notifiShowedRlt.toString());
 	}
-	//反注册的回调
+
 	@Override
 	public void onUnregisterResult(Context context, int errorCode) {
 		if (context == null) {
@@ -92,7 +63,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		show(context, text);
 
 	}
-	//设置tag的回调
+
 	@Override
 	public void onSetTagResult(Context context, int errorCode, String tagName) {
 		if (context == null) {
@@ -108,7 +79,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		show(context, text);
 
 	}
-	//删除tag的回调
+
 	@Override
 	public void onDeleteTagResult(Context context, int errorCode, String tagName) {
 		if (context == null) {
@@ -128,15 +99,10 @@ public class MessageReceiver extends XGPushBaseReceiver {
 	// 通知点击回调 actionType=1为该消息被清除，actionType=0为该消息被点击
 	@Override
 	public void onNotifactionClickedResult(Context context,
-										   XGPushClickedResult message) {
-
+			XGPushClickedResult message) {
 		if (context == null || message == null) {
 			return;
 		}
-		Log.e("LC","++++++++++++++++++");
-//		Intent intent = new Intent(context, SettingActivity.class);
-//		//intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//		context.startActivity(intent);
 		String text = "";
 		if (message.getActionType() == XGPushClickedResult.NOTIFACTION_CLICKED_TYPE) {
 			// 通知在通知栏被点击啦。。。。。
@@ -158,19 +124,21 @@ public class MessageReceiver extends XGPushBaseReceiver {
 				// key1为前台配置的key
 				if (!obj.isNull("key")) {
 					String value = obj.getString("key");
-					Log.d(LogTag, "get custom value:" + value);}
+					Log.d(LogTag, "get custom value:" + value);
+				}
 				// ...
 			} catch (JSONException e) {
-				e.printStackTrace();}}
+				e.printStackTrace();
+			}
+		}
 		// APP自主处理的过程。。。
 		Log.d(LogTag, text);
 		show(context, text);
 	}
 
-	//注册的回调
 	@Override
 	public void onRegisterResult(Context context, int errorCode,
-								 XGPushRegisterResult message) {
+			XGPushRegisterResult message) {
 		// TODO Auto-generated method stub
 		if (context == null || message == null) {
 			return;
@@ -187,5 +155,29 @@ public class MessageReceiver extends XGPushBaseReceiver {
 		show(context, text);
 	}
 
+	// 消息透传
+	@Override
+	public void onTextMessage(Context context, XGPushTextMessage message) {
+		// TODO Auto-generated method stub
+		String text = "收到消息:" + message.toString();
+		// 获取自定义key-value
+		String customContent = message.getCustomContent();
+		if (customContent != null && customContent.length() != 0) {
+			try {
+				JSONObject obj = new JSONObject(customContent);
+				// key1为前台配置的key
+				if (!obj.isNull("key")) {
+					String value = obj.getString("key");
+					Log.d(LogTag, "get custom value:" + value);
+				}
+				// ...
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		// APP自主处理消息的过程...
+		Log.d(LogTag, text);
+		show(context, text);
+	}
 
 }
