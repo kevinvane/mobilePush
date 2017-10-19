@@ -14,7 +14,7 @@ import com.tencent.android.tpush.XGPushTextMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-;
+
 
 public class MessageReceiver extends XGPushBaseReceiver {
 	private Intent intent = new Intent("com.qq.xgdemo.activity.UPDATE_LISTVIEW");
